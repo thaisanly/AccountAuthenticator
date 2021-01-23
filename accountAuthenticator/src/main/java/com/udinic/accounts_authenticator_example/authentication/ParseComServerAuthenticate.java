@@ -69,7 +69,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         Log.d("udini", "userSignIn");
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        String url = "https://api.parse.com/1/login";
+        String url = "https://api-beta1.agrbuddy.com/v1/email-login";
 
 
         String query = null;
