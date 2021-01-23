@@ -39,6 +39,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private AccountManager mAccountManager;
     private String mAuthTokenType;
 
+    private TextView txtEmail;
+    private TextView txtPassword;
+
     /**
      * Called when the activity is first created.
      */
@@ -47,6 +50,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_login);
         mAccountManager = AccountManager.get(getBaseContext());
+
+        txtEmail = findViewById(R.id.accountName);
+        txtPassword = findViewById(R.id.accountPassword);
+
+        txtEmail.setText("admin@agribuddy.com");
+        txtPassword.setText("password");
 
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
@@ -86,9 +95,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     public void submit() {
-
-        final String userName = ((TextView) findViewById(R.id.accountName)).getText().toString();
-        final String userPass = ((TextView) findViewById(R.id.accountPassword)).getText().toString();
+        final String userName = txtEmail.getText().toString().trim();
+        final String userPass = txtPassword.getText().toString().trim();
 
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
