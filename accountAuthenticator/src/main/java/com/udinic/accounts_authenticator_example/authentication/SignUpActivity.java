@@ -27,6 +27,8 @@ public class SignUpActivity extends Activity {
 
     private String TAG = getClass().getSimpleName();
     private String mAccountType;
+    private TextView txtEmail;
+    private TextView txtPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,12 @@ public class SignUpActivity extends Activity {
         mAccountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
         setContentView(R.layout.act_register);
+
+        txtEmail = findViewById(R.id.accountName);
+        txtPassword = findViewById(R.id.accountPassword);
+
+        txtEmail.setText("admin@agribuddy.com");
+        txtPassword.setText("password");
 
         findViewById(R.id.alreadyMember).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +66,8 @@ public class SignUpActivity extends Activity {
         new AsyncTask<String, Void, Intent>() {
 
             String name = ((TextView) findViewById(R.id.name)).getText().toString().trim();
-            String accountName = ((TextView) findViewById(R.id.accountName)).getText().toString().trim();
-            String accountPassword = ((TextView) findViewById(R.id.accountPassword)).getText().toString().trim();
+            String accountName = txtEmail.getText().toString().trim();
+            String accountPassword = txtPassword.getText().toString().trim();
 
             @Override
             protected Intent doInBackground(String... params) {
