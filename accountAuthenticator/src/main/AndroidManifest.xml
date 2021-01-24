@@ -20,7 +20,9 @@
                        android:resource="@xml/authenticator" />
         </service>
 
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
     </application>
+
 
     <!-- *** Not really needed here, but convenient for copying to other apps that will use this module *** -->
     <uses-permission android:name="android.permission.INTERNET"/>

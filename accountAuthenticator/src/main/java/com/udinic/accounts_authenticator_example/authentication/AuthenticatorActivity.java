@@ -119,6 +119,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 } catch (Exception e) {
                     data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                    e.printStackTrace();
                 }
 
                 final Intent res = new Intent();

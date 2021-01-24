@@ -2,6 +2,10 @@ package com.udinic.accounts_authenticator_example.authentication;
 
 import android.util.Log;
 import com.google.gson.Gson;
+import com.udinic.accounts_authenticator_example.authentication.network.APIClient;
+import com.udinic.accounts_authenticator_example.authentication.network.Login;
+import com.udinic.accounts_authenticator_example.authentication.network.Response;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,6 +20,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 /**
  * Handles the comminication with Parse.com
@@ -68,41 +75,25 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
 
         Log.d("udini", "userSignIn");
 
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        String url = "https://api-beta1.agrbuddy.com/v1/email-login";
-
-
-        String query = null;
-        try {
-            query = String.format("%s=%s&%s=%s", "username", URLEncoder.encode(user, "UTF-8"), "password", pass);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        url += "?" + query;
-
-        HttpGet httpGet = new HttpGet(url);
-
-        httpGet.addHeader("X-Parse-Application-Id", "XUafJTkPikD5XN5HxciweVuSe12gDgk2tzMltOhr");
-        httpGet.addHeader("X-Parse-REST-API-Key", "8L9yTQ3M86O4iiucwWb4JS7HkxoSKo7ssJqGChWx");
-
-        HttpParams params = new BasicHttpParams();
-        params.setParameter("username", user);
-        params.setParameter("password", pass);
-        httpGet.setParams(params);
-//        httpGet.getParams().setParameter("username", user).setParameter("password", pass);
+        LoginInterface service = APIClient.getClient().create(LoginInterface.class);
 
         String authtoken = null;
-        try {
-            HttpResponse response = httpClient.execute(httpGet);
 
-            String responseString = EntityUtils.toString(response.getEntity());
-            if (response.getStatusLine().getStatusCode() != 200) {
-                ParseComError error = new Gson().fromJson(responseString, ParseComError.class);
-                throw new Exception("Error signing-in ["+error.code+"] - " + error.error);
+        try {
+
+            Log.d("udini", user);
+            Log.d("udini", pass);
+
+            Call<Response<Login>> call = service.login(user, pass, "123123");
+            Response<Login> response = call.execute().body();
+
+            Log.d("udini", response.message);
+
+            if (!response.success) {
+                throw new Exception(response.message);
             }
 
-            User loggedUser = new Gson().fromJson(responseString, User.class);
-            authtoken = loggedUser.sessionToken;
+            authtoken = response.data.token;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -116,6 +107,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
         int code;
         String error;
     }
+
     private class User implements Serializable {
 
         private String firstName;
